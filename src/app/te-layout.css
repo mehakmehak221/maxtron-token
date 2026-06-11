@@ -138,8 +138,9 @@
 }
 
 @keyframes te-text-shimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+  0% { background-position: 0% center; filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(15deg); }
+  100% { background-position: 200% center; filter: hue-rotate(0deg); }
 }
 
 .te-display-title {

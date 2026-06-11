@@ -20,7 +20,6 @@ export default function PageContent() {
       <div className="te-page">
         <TokenomicsHero />
         <ShieldFrameworkSection />
-        <FirewallSection />
         <WhatMaxtronDoesSection />
         <GovernanceSection />
         <TokenUtilitySection />

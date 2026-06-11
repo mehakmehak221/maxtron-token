@@ -177,7 +177,7 @@ export default function TokenomicsScene() {
       const h = Math.max(container.clientHeight, 1);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h, false);
+      renderer.setSize(w, h);
       group.scale.setScalar(w < 400 ? 0.78 : 1);
     };
 

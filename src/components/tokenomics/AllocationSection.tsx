@@ -31,9 +31,12 @@ export default function AllocationSection() {
                       width: '100%',
                       padding: '0.65rem 0.85rem',
                       borderRadius: '0.65rem',
-                      border: active === i ? '1px solid rgba(192,132,252,0.35)' : undefined,
+                      border: active === i ? '1px solid rgba(192,132,252,0.35)' : '1px solid rgba(255,255,255,0.02)',
                       cursor: 'pointer',
-                      background: 'rgba(255,255,255,0.03)',
+                      background: active === i ? 'rgba(87,51,157,0.15)' : 'rgba(255,255,255,0.03)',
+                      transition: 'all 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
+                      transform: active === i ? 'translateX(6px)' : 'none',
+                      boxShadow: active === i ? '0 0 16px rgba(192,132,252,0.15)' : 'none'
                     }}
                   >
                     <Check className="h-3.5 w-3.5 shrink-0 text-[#c084fc]" />

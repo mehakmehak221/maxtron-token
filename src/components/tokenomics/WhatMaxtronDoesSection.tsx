@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ShieldAlert, Key, Award } from 'lucide-react';
 import AnimatedSparkline from '../charts/AnimatedSparkline';
 import Reveal from '../Reveal';
 import { functionsIntro, whatMaxtronDoes } from '@/lib/tokenomics-data';
+
+const TAB_ICONS = [ShieldAlert, Key, Award];
 
 const sparkData = [
   [30, 42, 38, 55, 48, 62, 58, 70],
@@ -28,19 +30,41 @@ export default function WhatMaxtronDoesSection() {
               </h2>
             </Reveal>
             <div className="te-stat-stack" style={{ marginTop: '1.5rem' }}>
-              {whatMaxtronDoes.map((b, i) => (
+              {whatMaxtronDoes.map((b, i) => {
+                const Icon = TAB_ICONS[i];
+                return (
                 <Reveal key={b.id} variant="left" delay={i * 60}>
                   <button
                     type="button"
                     onClick={() => setTab(i)}
                     className={`te-glass te-stat-box w3-metric-enter${tab === i ? ' te-step-on' : ''}`}
-                    style={{ width: '100%', textAlign: 'left', cursor: 'pointer', border: tab === i ? '1px solid rgba(192,132,252,0.35)' : undefined }}
+                    style={{ 
+                      width: '100%', textAlign: 'left', cursor: 'pointer', 
+                      border: tab === i ? '1px solid rgba(192,132,252,0.4)' : '1px solid rgba(255,255,255,0.06)',
+                      background: tab === i ? 'rgba(87,51,157,0.15)' : 'rgba(255,255,255,0.02)',
+                      boxShadow: tab === i ? '0 8px 32px rgba(87,51,157,0.2)' : 'none',
+                      transform: tab === i ? 'translateX(8px)' : 'translateX(0)',
+                      transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
+                    }}
                   >
-                    <h4>{b.title}</h4>
-                    <p>{b.intro}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem' }}>
+                      <div style={{ 
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                        width: '2.1rem', height: '2.1rem', borderRadius: '0.5rem', 
+                        background: tab === i ? 'rgba(192,132,252,0.15)' : 'rgba(255,255,255,0.04)',
+                        border: `1px solid ${tab === i ? 'rgba(192,132,252,0.3)' : 'rgba(255,255,255,0.05)'}`,
+                        boxShadow: tab === i ? '0 0 16px rgba(192,132,252,0.3)' : 'none',
+                        transition: 'all 0.3s'
+                      }}>
+                        <Icon className="h-4 w-4" style={{ color: tab === i ? '#c084fc' : 'rgba(255,255,255,0.5)' }} />
+                      </div>
+                      <h4 style={{ margin: 0 }}>{b.title}</h4>
+                    </div>
+                    <p style={{ paddingLeft: '2.85rem' }}>{b.intro}</p>
                   </button>
                 </Reveal>
-              ))}
+                );
+              })}
             </div>
           </div>
 

@@ -13,25 +13,25 @@
   --brand-faint: #f5f3ff;
   --brand-whisper: #faf5ff;
 
-  --bg-page: #ffffff;
-  --bg-soft: #f7f4fc;
-  --bg-muted: #ede9fe;
-  --bg-card: #ffffff;
-  --bg-elevated: #faf5ff;
+  --bg-page: #080510;
+  --bg-soft: #120A20;
+  --bg-muted: #1A0E2D;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-elevated: rgba(255, 255, 255, 0.06);
   --bg-purple: #391F6B;
   --bg-purple-deep: linear-gradient(91deg, #391F6B 4.9%, rgba(87, 51, 157, 0.82) 98.5%);
   --card-gradient: linear-gradient(135deg, #391F6B 0%, #3C216F 9.09%, #3E2374 18.18%, #412478 27.27%, #44267D 36.36%, #462881 45.45%, #492A86 54.55%, #4C2C8A 63.64%, #4F2D8F 72.73%, #512F94 81.82%, #543198 90.91%, #57339D 100%);
 
-  --text-900: #391F6B;
-  --text-700: #44267D;
-  --text-muted: #6b5b8a;
-  --text-soft: #9b8ab8;
+  --text-900: #ffffff;
+  --text-700: #f5f3ff;
+  --text-muted: #a78bfa;
+  --text-soft: #c4b5fd;
   --text-on-purple: #ffffff;
   --text-on-purple-muted: rgba(255, 255, 255, 0.75);
 
-  --border-light: rgba(57, 31, 107, 0.12);
-  --border-mid: rgba(57, 31, 107, 0.22);
-  --border-glow: rgba(87, 51, 157, 0.45);
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-mid: rgba(255, 255, 255, 0.15);
+  --border-glow: rgba(192, 132, 252, 0.45);
   --border-on-purple: rgba(255, 255, 255, 0.15);
 
   --gradient-primary: var(--card-gradient);
@@ -109,8 +109,10 @@ body {
 .section-purple .utility-pill,
 .section-purple .kpi-tile,
 .section-purple .stat-strip {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
   color: var(--text-900);
+  border: 1px solid var(--border-light);
 }
 
 .section-purple .surface-card *,
