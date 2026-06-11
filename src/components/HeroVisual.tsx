@@ -2,18 +2,19 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Coins, Flame, Globe, LockKeyhole, Shield } from 'lucide-react';
-import ParticleField from './ParticleField';
+import PremiumPieChart from './PremiumPieChart';
+import { PIE_COLORS } from '@/lib/theme';
 
 const allocation = [
-  { label: 'Ecosystem', pct: 30, color: '#6b28c9' },
-  { label: 'Team', pct: 18, color: '#581c87' },
-  { label: 'Liquidity', pct: 12, color: '#7c3aed' },
-  { label: 'Treasury', pct: 13, color: '#4c1d95' },
-  { label: 'Compliance', pct: 5, color: '#9333ea' },
-  { label: 'Seed', pct: 4, color: '#3b0764' },
-  { label: 'Private', pct: 8, color: '#a855f7' },
-  { label: 'Public', pct: 7, color: '#8b5cf6' },
-  { label: 'Advisors', pct: 3, color: '#c084fc' },
+  { name: 'Ecosystem', percent: 30, color: PIE_COLORS[0] },
+  { name: 'Team', percent: 18, color: PIE_COLORS[1] },
+  { name: 'Liquidity', percent: 12, color: PIE_COLORS[2] },
+  { name: 'Treasury', percent: 13, color: PIE_COLORS[3] },
+  { name: 'Compliance', percent: 5, color: PIE_COLORS[4] },
+  { name: 'Seed', percent: 4, color: PIE_COLORS[5] },
+  { name: 'Private', percent: 8, color: PIE_COLORS[6] },
+  { name: 'Public', percent: 7, color: PIE_COLORS[7] },
+  { name: 'Advisors', percent: 3, color: PIE_COLORS[8] },
 ];
 
 const facts = [
@@ -58,68 +59,45 @@ function useCountUp(target: number, active: boolean, duration = 1400) {
 export default function HeroVisual() {
   const { ref, vis } = useVisible();
   const count = useCountUp(1000000000, vis);
+  const [activePie, setActivePie] = useState<number | null>(null);
 
   return (
     <div ref={ref} className="relative w-full">
-      <div className="token-snapshot relative overflow-hidden rounded-[24px] border border-white/20 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
-        <div className="pointer-events-none absolute inset-0 opacity-20">
-          <ParticleField count={45} spread={7} />
-        </div>
-
-        <div className="relative border-b border-[#ede9fe] bg-gradient-to-br from-[#f5f3ff] via-white to-[#ede9fe] px-5 py-6 sm:px-6 sm:py-7">
+      <div className="token-snapshot relative overflow-hidden rounded-[24px] border border-[#ede9fe] bg-white shadow-[0_24px_80px_rgba(57,31,107,0.18)]">
+        <div className="relative border-b border-[#ede9fe] bg-gradient-to-br from-[#f7f4fc] via-white to-[#ede9fe] px-5 py-6 sm:px-6 sm:py-7">
           <div className="mb-4 flex items-center gap-2">
             <div className="icon-box-solid h-9 w-9 animate-glow-pulse rounded-xl">
               <Coins className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-[#6b28c9]">MAXTRON — The Shield Token</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-[#391F6B]">MAXTRON — The Shield Token</div>
               <div className="text-xs font-semibold text-[#9b8ab8]">Token overview</div>
             </div>
           </div>
 
           <div className="text-[10px] font-bold uppercase tracking-widest text-[#9b8ab8]">Total Supply</div>
-          <div className="font-display mt-1 text-[clamp(1.5rem,4.5vw,2rem)] font-black leading-none text-[#1e0a3c] tabular-nums">
+          <div className="font-display mt-1 text-[clamp(1.5rem,4.5vw,2rem)] font-black leading-none text-[#391F6B] tabular-nums">
             {vis ? count.toLocaleString('en-US') : '0'}
           </div>
-          <div className="mt-1 text-sm font-bold text-[#6b28c9]">MAXTRON</div>
-          <div className="mt-2 inline-flex rounded-full bg-[#f5f3ff] px-3 py-1 text-[10px] font-bold text-[#6b28c9]">
+          <div className="mt-1 text-sm font-bold text-[#57339D]">MAXTRON</div>
+          <div className="mt-2 inline-flex rounded-full bg-[#f5f3ff] px-3 py-1 text-[10px] font-bold text-[#391F6B]">
             Fixed cap · No additional tokens may be minted
           </div>
         </div>
 
-        <div className="relative border-b border-[#ede9fe] px-5 py-5 sm:px-6">
-          <div className="mb-3 flex items-center justify-between">
+        <div className="relative border-b border-[#ede9fe] px-4 py-6 sm:px-6">
+          <div className="mb-2 flex items-center justify-between">
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#9b8ab8]">Allocation</span>
-            <span className="text-[10px] font-bold text-[#6b28c9]">9 pools</span>
+            <span className="text-[10px] font-bold text-[#391F6B]">9 pools</span>
           </div>
-          <div className="flex h-3 overflow-hidden rounded-full sm:h-4">
-            {allocation.map((a, i) => (
-              <div
-                key={a.label}
-                className="alloc-segment"
-                style={{
-                  flex: a.pct,
-                  background: a.color,
-                  transform: vis ? 'scaleY(1)' : 'scaleY(0)',
-                  transition: `transform .6s ${i * 60}ms cubic-bezier(.22,1,.36,1)`,
-                  transformOrigin: 'bottom',
-                }}
-                title={`${a.label} ${a.pct}%`}
-              />
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
-            {allocation.map((a, i) => (
-              <span
-                key={a.label}
-                className="flex items-center gap-1.5 text-[10px] font-semibold text-[#6b5b8a]"
-                style={{ opacity: vis ? 1 : 0, transition: `opacity .4s ${300 + i * 40}ms ease` }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full" style={{ background: a.color }} />
-                {a.label} {a.pct}%
-              </span>
-            ))}
-          </div>
+          <PremiumPieChart
+            items={allocation}
+            activeIndex={activePie}
+            onActive={setActivePie}
+            size={260}
+            innerRadius={0.44}
+            animated={vis}
+          />
         </div>
 
         <div className="relative grid grid-cols-2 gap-px bg-[#ede9fe]">
@@ -133,7 +111,7 @@ export default function HeroVisual() {
                 <f.icon className="h-4 w-4" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-black text-[#1e0a3c] sm:text-sm">{f.title}</div>
+                <div className="text-xs font-black text-[#391F6B] sm:text-sm">{f.title}</div>
                 <div className="mt-0.5 text-[10px] leading-snug text-[#6b5b8a] sm:text-[11px]">{f.desc}</div>
               </div>
             </div>

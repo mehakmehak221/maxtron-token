@@ -3,101 +3,95 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { Menu, Shield, X } from 'lucide-react';
 
-const menuItems = [
-  { label: 'Overview', href: '#overview' },
+const links = [
   { label: 'Framework', href: '#framework' },
+  { label: 'Firewall', href: '#firewall' },
+  { label: 'Functions', href: '#functions' },
   { label: 'Utility', href: '#utility' },
-  { label: 'Analytics', href: '#analytics' },
-  { label: 'Allocation', href: '#allocation' },
-  { label: 'Value', href: '#value' },
+  { label: 'Supply', href: '#supply' },
   { label: 'Compliance', href: '#compliance' },
 ];
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [solid, setSolid] = useState(false);
+  const [active, setActive] = useState('#overview');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32);
+    const onScroll = () => setSolid(window.scrollY > 40);
     onScroll();
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navigate = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+  useEffect(() => {
+    const targets = [
+      { id: 'overview' },
+      ...links.map((l) => ({ id: l.href.slice(1) })),
+      { id: 'governance' },
+      { id: 'value' },
+    ];
+    const els = targets.map((t) => document.getElementById(t.id)).filter(Boolean) as Element[];
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActive(`#${e.target.id}`); }),
+      { rootMargin: '-40% 0px -50% 0px', threshold: 0 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    setIsOpen(false);
-    const target = document.querySelector(href);
-    if (!target) return;
-    const offset = 88;
-    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: 'smooth' });
+    setOpen(false);
+    const el = document.querySelector(href);
+    if (!el) return;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
   };
 
   return (
-    <header className={`fixed left-0 right-0 top-0 z-50 transition-all duration-400 ${scrolled ? 'header-scrolled py-3' : 'bg-transparent py-5'}`}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
-        <a href="#overview" onClick={(e) => navigate(e, '#overview')} className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-md">
-            <Shield className="h-5 w-5 text-[#6b28c9]" />
-          </div>
-          <div className="leading-none">
-            <div className={`font-display text-lg font-black tracking-tight ${scrolled ? 'text-[#1e0a3c]' : 'text-white'}`}>MAXTRON</div>
-            <div className={`mt-0.5 text-[10px] font-bold uppercase tracking-widest ${scrolled ? 'text-[#6b28c9]' : 'text-white/70'}`}>The Shield Token</div>
-          </div>
-        </a>
+    <header className={`te-nav-wrap${solid ? ' te-nav-solid' : ''}`}>
+      <div className="page-container">
+        <div className="te-nav-inner">
+          <a href="#overview" onClick={(e) => go(e, '#overview')} className="te-brand">
+            <div className="te-logo"><Shield className="h-4 w-4 text-white" /></div>
+            <span className="te-brand-name">MAXTRON</span>
+          </a>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
-          {menuItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className={`group relative rounded-lg px-4 py-2 text-sm font-semibold transition ${
-                scrolled
-                  ? 'text-[#6b5b8a] hover:bg-[#f5f3ff] hover:text-[#6b28c9]'
-                  : 'text-white/80 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              {item.label}
-              <span className="absolute bottom-1 left-1/2 h-[2px] w-0 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#6b28c9] to-[#a855f7] transition-all duration-300 group-hover:w-4/5" />
-            </a>
-          ))}
-        </nav>
+          <nav className="te-nav-pill" aria-label="Sections">
+            <div className="te-nav-pill-inner">
+              {links.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => go(e, item.href)}
+                  className={`te-nav-link${active === item.href ? ' te-nav-link-on' : ''}`}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </nav>
 
-        <div className="hidden items-center lg:flex">
-          <div className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 ${scrolled ? 'border-[#ede9fe] bg-[#f5f3ff]' : 'border-white/25 bg-white/10'}`}>
-            <span className={`h-1.5 w-1.5 animate-pulse rounded-full ${scrolled ? 'bg-[#6b28c9]' : 'bg-white'}`} />
-            <span className={`text-[11px] font-bold tracking-wider ${scrolled ? 'text-[#6b28c9]' : 'text-white'}`}>LIVE</span>
-          </div>
-        </div>
+          <a href="#supply" onClick={(e) => go(e, '#supply')} className="te-btn te-btn-primary te-nav-cta">
+            Supply
+          </a>
 
-        <div className="flex items-center gap-2 lg:hidden">
-          <div className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 ${scrolled ? 'border-[#ede9fe] bg-[#f5f3ff]' : 'border-white/25 bg-white/10'}`}>
-            <span className={`h-1.5 w-1.5 animate-pulse rounded-full ${scrolled ? 'bg-[#6b28c9]' : 'bg-white'}`} />
-            <span className={`text-[10px] font-bold tracking-wider ${scrolled ? 'text-[#6b28c9]' : 'text-white'}`}>LIVE</span>
-          </div>
-          <button onClick={() => setIsOpen((v) => !v)} className={`rounded-xl border p-2.5 shadow-sm ${scrolled ? 'border-[#ede9fe] bg-white text-[#6b28c9]' : 'border-white/30 bg-white/10 text-white'}`} aria-label="Menu">
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <button type="button" className="te-menu-btn" onClick={() => setOpen((v) => !v)} aria-label="Menu">
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </div>
 
-      {isOpen && (
-        <div className="mobile-nav-panel lg:hidden">
-          <nav className="grid gap-1">
-            {menuItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={(e) => navigate(e, item.href)}
-                className="rounded-xl px-4 py-3 text-sm font-bold text-[#6b5b8a] transition-colors hover:bg-[#f5f3ff] hover:text-[#6b28c9]"
-              >
+        {open && (
+          <div className="te-mobile-nav">
+            <a href="#overview" onClick={(e) => go(e, '#overview')} className={active === '#overview' ? 'te-nav-link-on' : ''}>Overview</a>
+            {links.map((item) => (
+              <a key={item.href} href={item.href} onClick={(e) => go(e, item.href)} className={active === item.href ? 'te-nav-link-on' : ''}>
                 {item.label}
               </a>
             ))}
-          </nav>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </header>
   );
 }

@@ -1,23 +1,28 @@
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { DM_Sans, Sora } from 'next/font/google';
 import './globals.css';
+import './tk-tokenomics.css';
+import './tk-web3-fx.css';
+import './te-layout.css';
+import './te-modern.css';
+import './te-animations.css';
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-dm-sans',
   display: 'swap',
 });
 
-const spaceGrotesk = Space_Grotesk({
+const sora = Sora({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-sora',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'MAXTRON — The Shield Token | Tokenomics',
+  title: 'MAXTRON Tokenomics — Supply, Allocation, Vesting & Utility',
   description:
-    'Explore MAXTRON, the utility and compliance token powering The Shield Framework for secure real-world asset tokenization.',
+    'Complete MAXTRON tokenomics: 1B fixed supply, allocation breakdown, vesting schedules, utility mechanics, governance, economic model and transparency.',
   keywords: ['MAXTRON', 'Shield Token', 'RWA', 'tokenomics', 'real estate', 'blockchain'],
   openGraph: {
     title: 'MAXTRON — The Shield Token',
@@ -33,10 +38,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}>
+    <html lang="en" className={`${dmSans.variable} ${sora.variable} h-full antialiased`}>
       <body
         className="min-h-full flex flex-col"
-        style={{ fontFamily: 'var(--font-inter, system-ui), sans-serif' }}
+        style={{ fontFamily: 'var(--font-dm-sans, system-ui), sans-serif' }}
       >
         {children}
       </body>

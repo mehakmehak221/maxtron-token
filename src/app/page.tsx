@@ -3,9 +3,9 @@ import PageContent from '@/components/PageContent';
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-white text-[#1e0a3c]">
+    <div className="te-app">
       <Header />
-      <main className="w-full">
+      <main>
         <PageContent />
       </main>
     </div>

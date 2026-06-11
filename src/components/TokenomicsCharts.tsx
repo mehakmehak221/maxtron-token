@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Activity, Flame, LockKeyhole, TrendingUp, Zap } from 'lucide-react';
+import PremiumPieChart, { type PieItem } from './PremiumPieChart';
+import { CHART_COLORS, PIE_COLORS } from '@/lib/theme';
 
 const monthlyActivity = [
   { label: 'Q1', bond: 14, spend: 9, burn: 5 },
@@ -12,12 +14,12 @@ const monthlyActivity = [
   { label: 'Q6', bond: 68, spend: 56, burn: 30 },
 ];
 
-const utilityMix = [
-  { label: 'Compliance Bonds', value: 38, color: '#6b28c9' },
-  { label: 'Due Diligence', value: 24, color: '#581c87' },
-  { label: 'Listing Rewards', value: 18, color: '#7c3aed' },
-  { label: 'Governance', value: 12, color: '#9333ea' },
-  { label: 'Other Utility', value: 8, color: '#a855f7' },
+const utilityMix: PieItem[] = [
+  { name: 'Compliance Bonds', percent: 38, color: PIE_COLORS[0] },
+  { name: 'Due Diligence', percent: 24, color: PIE_COLORS[2] },
+  { name: 'Listing Rewards', percent: 18, color: PIE_COLORS[4] },
+  { name: 'Governance', percent: 12, color: PIE_COLORS[6] },
+  { name: 'Other Utility', percent: 8, color: PIE_COLORS[8] },
 ];
 
 const vesting = [
@@ -30,10 +32,10 @@ const vesting = [
 ];
 
 const demandSteps = [
-  { label: 'Acquire MAXTRON', sub: 'Sponsors & investors', pct: 100, color: '#6b28c9' },
-  { label: 'Lock as Bond', sub: 'Property listings', pct: 72, color: '#581c87' },
-  { label: 'Spend on Access', sub: 'Reports & diligence', pct: 54, color: '#7c3aed' },
-  { label: 'Burn on Use', sub: 'Permanent removal', pct: 28, color: '#9333ea' },
+  { label: 'Acquire MAXTRON', sub: 'Sponsors & investors', pct: 100, color: CHART_COLORS.bond },
+  { label: 'Lock as Bond', sub: 'Property listings', pct: 72, color: CHART_COLORS.spend },
+  { label: 'Spend on Access', sub: 'Reports & diligence', pct: 54, color: CHART_COLORS.ecosystem },
+  { label: 'Burn on Use', sub: 'Permanent removal', pct: 28, color: CHART_COLORS.burn },
 ];
 
 function useVisible(threshold = 0.12) {
@@ -75,10 +77,10 @@ function Panel({ title, desc, badge, children, className = '' }: {
   className?: string;
 }) {
   return (
-    <div className={`chart-panel chart-panel-modern blockchain-card h-full ${className}`}>
+    <div className={`tok-chart-panel h-full ${className}`}>
       <div className="chart-panel-head">
         <div>
-          <h3 className="font-display text-base font-black text-[#1e0a3c] sm:text-lg">{title}</h3>
+          <h3 className="font-display text-base font-black text-[#391F6B] sm:text-lg">{title}</h3>
           {desc && <p className="mt-0.5 text-xs text-[#9b8ab8]">{desc}</p>}
         </div>
         {badge}
@@ -90,7 +92,7 @@ function Panel({ title, desc, badge, children, className = '' }: {
 
 function Tag({ children, up }: { children: React.ReactNode; up?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f3ff] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#6b28c9]">
+    <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f3ff] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#391F6B]">
       {up && <TrendingUp className="h-3 w-3" />}
       {children}
     </span>
@@ -109,22 +111,20 @@ function KpiTile({ label, value, suffix, prefix, icon: Icon, trend, vis, delay, 
   raw?: boolean;
 }) {
   const count = useCountUp(value, vis, 1000 + delay);
-  const display = raw
-    ? `${count}${suffix}`
-    : `${prefix}${count}${suffix}`;
+  const display = raw ? `${count}${suffix}` : `${prefix}${count}${suffix}`;
   return (
     <div
-      className="kpi-tile kpi-tile-modern blockchain-card group min-w-0"
+      className="ui-card ui-card-lift ui-stat flex items-center gap-4 group min-w-0"
       style={{ opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(16px)', transition: `all .6s ${delay}ms cubic-bezier(.22,1,.36,1)` }}
     >
-      <div className="icon-box icon-box-pulse h-11 w-11 transition group-hover:scale-110 group-hover:bg-[#6b28c9] group-hover:text-white">
+      <div className="icon-box icon-box-pulse h-11 w-11 transition group-hover:scale-110 group-hover:text-white">
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-[10px] font-bold uppercase tracking-wider text-[#9b8ab8]">{label}</div>
-        <div className="font-display text-xl font-black tabular-nums text-[#1e0a3c] sm:text-2xl">{vis ? display : '—'}</div>
+        <div className="font-display text-xl font-black tabular-nums text-[#391F6B] sm:text-2xl">{vis ? display : '—'}</div>
       </div>
-      {trend === 'up' && <TrendingUp className="h-4 w-4 shrink-0 text-[#6b28c9] opacity-60" />}
+      {trend === 'up' && <TrendingUp className="h-4 w-4 shrink-0 text-[#391F6B] opacity-60" />}
     </div>
   );
 }
@@ -153,7 +153,7 @@ function ActivityChart() {
     <Panel title="Platform Activity" desc="Bond locks · access spend · burns" badge={<Tag up>Growing</Tag>}>
       <div ref={ref}>
         <div className="mb-4 flex flex-wrap gap-4">
-          {[{ l: 'Bond', c: '#6b28c9' }, { l: 'Spend', c: '#7c3aed' }, { l: 'Burn', c: '#a855f7' }].map((x) => (
+          {[{ l: 'Bond', c: CHART_COLORS.bond }, { l: 'Spend', c: CHART_COLORS.spend }, { l: 'Burn', c: CHART_COLORS.burn }].map((x) => (
             <span key={x.l} className="flex items-center gap-1.5 text-[11px] font-semibold text-[#6b7280]">
               <span className="h-2 w-2 rounded-full" style={{ background: x.c }} />{x.l}
             </span>
@@ -163,7 +163,7 @@ function ActivityChart() {
           {monthlyActivity.map((d, i) => (
             <div key={d.label} className="group flex flex-1 flex-col items-center gap-2">
               <div className="flex h-44 w-full items-end justify-center gap-0.5 sm:gap-1">
-                {[{ v: d.bond, c: '#6b28c9' }, { v: d.spend, c: '#7c3aed' }, { v: d.burn, c: '#a855f7' }].map((b, bi) => (
+                {[{ v: d.bond, c: CHART_COLORS.bond }, { v: d.spend, c: CHART_COLORS.spend }, { v: d.burn, c: CHART_COLORS.burn }].map((b, bi) => (
                   <div
                     key={bi}
                     className="bar-animated w-full max-w-[22px] rounded-t-lg group-hover:brightness-110"
@@ -184,29 +184,35 @@ function ActivityChart() {
   );
 }
 
-function UtilityChart() {
-  const { ref, vis } = useVisible();
+function UtilityPieChart() {
+  const [active, setActive] = useState<number | null>(null);
   return (
     <Panel title="Utility Mix" desc="Token consumption by function" badge={<Tag>Live</Tag>}>
-      <div ref={ref} className="space-y-4">
-        {utilityMix.map((u, i) => (
-          <div key={u.label}>
-            <div className="mb-1.5 flex justify-between text-sm">
-              <span className="font-semibold text-[#374151]">{u.label}</span>
-              <span className="font-black tabular-nums" style={{ color: u.color }}>{vis ? u.value : 0}%</span>
-            </div>
-            <div className="h-3 overflow-hidden rounded-full bg-[#f5f3ff]">
-              <div
-                className="bar-shine h-full rounded-full"
-                style={{
-                  width: vis ? `${u.value}%` : '0%',
-                  background: `linear-gradient(90deg, ${u.color}, ${u.color}99)`,
-                  transition: `width 1s ${i * 100}ms cubic-bezier(.22,1,.36,1)`,
-                }}
-              />
-            </div>
-          </div>
-        ))}
+      <div className="flex flex-col items-center py-2">
+        <PremiumPieChart
+          items={utilityMix}
+          activeIndex={active}
+          onActive={setActive}
+          size={300}
+          innerRadius={0.45}
+          centerLabel="Utility"
+          centerValue="100%"
+          centerSub="MIX"
+        />
+        <div className="pie-legend mt-2">
+          {utilityMix.map((u, i) => (
+            <button
+              key={u.name}
+              type="button"
+              onMouseEnter={() => setActive(i)}
+              onMouseLeave={() => setActive(null)}
+              className={`pie-legend-item ${active === i ? 'pie-legend-item-active' : ''}`}
+            >
+              <span className="pie-legend-dot" style={{ background: u.color }} />
+              {u.name}
+            </button>
+          ))}
+        </div>
       </div>
     </Panel>
   );
@@ -215,11 +221,11 @@ function UtilityChart() {
 function VestingChart() {
   const { ref, vis } = useVisible();
   const layers = [
-    { key: 'ecosystem' as const, label: 'Ecosystem', color: '#6b28c9' },
-    { key: 'team' as const, label: 'Team', color: '#581c87' },
-    { key: 'liquidity' as const, label: 'Liquidity', color: '#7c3aed' },
-    { key: 'treasury' as const, label: 'Treasury', color: '#9333ea' },
-    { key: 'other' as const, label: 'Other', color: '#a855f7' },
+    { key: 'ecosystem' as const, label: 'Ecosystem', color: CHART_COLORS.ecosystem },
+    { key: 'team' as const, label: 'Team', color: CHART_COLORS.team },
+    { key: 'liquidity' as const, label: 'Liquidity', color: CHART_COLORS.liquidity },
+    { key: 'treasury' as const, label: 'Treasury', color: CHART_COLORS.treasury },
+    { key: 'other' as const, label: 'Other', color: CHART_COLORS.other },
   ];
   const maxTotal = Math.max(...vesting.map((row) => layers.reduce((s, l) => s + row[l.key], 0)));
 
@@ -264,7 +270,7 @@ function VestingChart() {
                   </div>
                 </div>
                 <span
-                  className="w-10 shrink-0 text-right font-display text-sm font-black tabular-nums text-[#6b28c9]"
+                  className="w-10 shrink-0 text-right font-display text-sm font-black tabular-nums text-[#391F6B]"
                   style={{ opacity: vis ? 1 : 0, transition: `opacity .4s ${qi * 80 + 400}ms ease` }}
                 >
                   {pct}%
@@ -291,13 +297,12 @@ function DemandChart() {
           >
             <div className="flex items-center gap-3">
               <span
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black text-white"
-                style={{ background: s.color }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black text-white card-gradient"
               >
                 {i + 1}
               </span>
               <div className="min-w-0">
-                <div className="text-sm font-black leading-tight text-[#1e0a3c]">{s.label}</div>
+                <div className="text-sm font-black leading-tight text-[#391F6B]">{s.label}</div>
                 <div className="mt-0.5 text-[11px] text-[#9b8ab8]">{s.sub}</div>
               </div>
             </div>
@@ -319,16 +324,80 @@ function DemandChart() {
   );
 }
 
+function SupplyGrowthChart() {
+  const { ref, vis } = useVisible();
+  const points = [
+    { q: 'Launch', supply: 100, burn: 0 },
+    { q: 'Q1', supply: 100, burn: 5 },
+    { q: 'Q2', supply: 100, burn: 13 },
+    { q: 'Q3', supply: 100, burn: 25 },
+    { q: 'Q4', supply: 100, burn: 42 },
+    { q: 'Q5', supply: 100, burn: 65 },
+    { q: 'Q6', supply: 100, burn: 88 },
+  ];
+  const max = 100;
+  const w = 100;
+  const h = 48;
+  const pad = 4;
+  const step = (w - pad * 2) / (points.length - 1);
+  const supplyPath = points.map((p, i) => {
+    const x = pad + i * step;
+    const y = h - pad - (p.supply / max) * (h - pad * 2);
+    return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+  }).join(' ');
+  const burnPath = points.map((p, i) => {
+    const x = pad + i * step;
+    const y = h - pad - (p.burn / max) * (h - pad * 2);
+    return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+  }).join(' ');
+
+  return (
+    <Panel title="Supply Dynamics" desc="Fixed 1B cap · usage-based burn trajectory" badge={<Tag up>Deflationary</Tag>}>
+      <div ref={ref}>
+        <div className="mb-4 flex gap-6">
+          <span className="flex items-center gap-2 text-xs font-semibold text-[#6b7280]">
+            <span className="h-0.5 w-4 bg-[#391F6B]" /> Total Supply (fixed)
+          </span>
+          <span className="flex items-center gap-2 text-xs font-semibold text-[#6b7280]">
+            <span className="h-0.5 w-4 bg-[#57339D]" /> Cumulative Burn
+          </span>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="supply-growth-svg w-full" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="burnArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#57339D" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#57339D" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {vis && (
+            <>
+              <path d={`${burnPath} L ${pad + (points.length - 1) * step} ${h - pad} L ${pad} ${h - pad} Z`} fill="url(#burnArea)" style={{ opacity: vis ? 1 : 0, transition: 'opacity 1s ease' }} />
+              <path d={supplyPath} fill="none" stroke="#391F6B" strokeWidth="1.2" strokeDasharray={vis ? 'none' : '200'} strokeDashoffset={vis ? 0 : 200} style={{ transition: 'stroke-dashoffset 1.2s ease' }} />
+              <path d={burnPath} fill="none" stroke="#57339D" strokeWidth="1.2" style={{ opacity: vis ? 1 : 0, transition: 'opacity 1s .3s ease' }} />
+            </>
+          )}
+        </svg>
+        <div className="mt-2 flex justify-between">
+          {points.map((p) => (
+            <span key={p.q} className="text-[9px] font-bold text-[#9b8ab8]">{p.q}</span>
+          ))}
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
 export default function AnalyticsDashboard() {
   return (
     <div className="space-y-5">
       <KpiStrip />
+      <SupplyGrowthChart />
       <div className="grid gap-5 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <ActivityChart />
         </div>
         <div className="lg:col-span-2">
-          <UtilityChart />
+          <UtilityPieChart />
         </div>
       </div>
       <VestingChart />
