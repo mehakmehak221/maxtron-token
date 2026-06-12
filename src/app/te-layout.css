@@ -29,6 +29,14 @@
   border-bottom: 1px solid rgba(192, 132, 252, 0.12);
 }
 
+@media (max-width: 1023px) {
+  .te-nav-wrap.te-nav-open {
+    position: relative;
+    background: rgba(5, 1, 18, 0.98);
+    border-bottom: 1px solid rgba(192, 132, 252, 0.12);
+  }
+}
+
 .te-nav-inner {
   display: flex;
   align-items: center;
@@ -646,7 +654,7 @@
 @media (min-width: 1024px) { .te-menu-btn { display: none; } }
 
 .te-nav-cta { margin-left: auto; display: none; }
-@media (min-width: 640px) { .te-nav-cta { display: inline-flex; } }
+@media (min-width: 1024px) { .te-nav-cta { display: inline-flex; } }
 
 .te-mobile-nav {
   margin-top: 0.5rem;

@@ -49,7 +49,7 @@ export default function Header() {
   };
 
   return (
-    <header className={`te-nav-wrap${solid ? ' te-nav-solid' : ''}`}>
+    <header className={`te-nav-wrap${solid ? ' te-nav-solid' : ''}${open ? ' te-nav-open' : ''}`}>
       <div className="page-container">
         <div className="te-nav-inner">
           <a href="#overview" onClick={(e) => go(e, '#overview')} className="te-brand">
